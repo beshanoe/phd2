@@ -2342,3 +2342,25 @@ void Scope::ScopeGraphControlPane::OnDecModeChoice(wxCommandEvent& WXUNUSED(evt)
 {
     m_pScope->SetDecGuideMode(m_pDecMode->GetSelection());
 }
+
+void Scope::AdjustCalibrationForScopePointing()
+{
+    Debug.AddLine(wxString::Format("Scope::AdjustCalibrationForScopePointing: checking if need to change DEC mode"));
+    Mount::AdjustCalibrationForScopePointing();
+    PierSide newPierSide = pPointingSource->SideOfPier();
+
+    if (newPierSide == PIER_SIDE_EAST && m_decGuideMode == DEC_NORTH) {
+        Debug.AddLine(wxString::Format("Scope::AdjustCalibrationForScopePointing: changing DEC mode to SOUTH"));
+        SetDecGuideMode(DEC_SOUTH);
+        if (pFrame->pGraphLog)
+            pFrame->pGraphLog->UpdateControls();
+    }
+    else if (newPierSide == PIER_SIDE_WEST && m_decGuideMode == DEC_SOUTH)
+    {
+        Debug.AddLine(wxString::Format("Scope::AdjustCalibrationForScopePointing: changing DEC mode to NORTH"));
+        SetDecGuideMode(DEC_NORTH);
+        if (pFrame->pGraphLog)
+            pFrame->pGraphLog->UpdateControls();
+    }
+    
+}

@@ -157,6 +157,7 @@ class Scope : public Mount
 public:
     bool m_CalDetailsValidated;
     bool m_bogusGuideRatesFlagged;
+    void AdjustCalibrationForScopePointing() override;
 
     // Things related to the Advanced Config Dialog
 protected:
